@@ -1,25 +1,23 @@
-#Посмотреть документацию к API GitHub, разобраться как вывести список репозиториев для конкретного пользователя,
-# сохранить JSON-вывод в файле *.json; написать функцию, возвращающую список репозиториев.
+"""
+Посмотреть документацию к API GitHub, разобраться как вывести список репозиториев для конкретного пользователя,
+ сохранить JSON-вывод в файле *.json; написать функцию, возвращающую список репозиториев.
+"""
 
 import requests
-import os
-
-def get_token():
-    f = open("../Lesson1/github_token.txt", "r")
-    token = f.readline().rstrip('\n')
-    f.close()
-    return token
-
-def get_user_agent():
-    f = open("../Lesson1/user-agent.txt", "r")
-    user_agent = f.readline().rstrip('\n')
-    f.close()
-    return user_agent
+import json
 
 
-username = 'MajeroRuf'
+def get_user_repo():
+    url = 'https://api.github.com'
+    user = input("Введите Имя пользователя GitHub: ")
+    repo = []
 
-token = get_token()
+    r = requests.get(f'{url}/users/{user}/repos')
 
-repos = requests.get('https://api.github.com/user/repos', auth=(username, token), verify=False)
+    with open('data.json', 'w') as f:
+        json.dump(r.json(), f)
 
+    for i in r.json():
+        repo.append(i['name'])
+
+    return repo
